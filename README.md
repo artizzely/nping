@@ -26,3 +26,5 @@ Trying to connectto 'google.com' IP: 64.233.165.113
 
 Reverse Lookup domain: lg-in-f113.1e100.net
 ```
+
+# todo list
