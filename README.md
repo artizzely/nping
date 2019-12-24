@@ -28,4 +28,3 @@ Reverse Lookup domain: lg-in-f113.1e100.net
 ```
 
 # todo list
-*

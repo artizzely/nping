@@ -1,6 +1,6 @@
-# the compiler to use
+# the compiler
 CC=gcc
-# options which you pass to the compiler
+# options for the compiler
 CFLAGS=-c -Wall
 LDFLAGS=
 SOURCES=nping.c

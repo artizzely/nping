@@ -23,6 +23,10 @@ struct ping_pkt
 char *dns_lookup(char *addr_host, struct sockaddr_in *addr_con);
 /* resolve the reverse lookup of the hostname */
 char *reverse_dns_lookup(char *ip_addr);
+/* interrupt handler */
+void intHandler(int dummy);
+/* send ping request */
+void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr, char ping_dom, char *ping_ip, char *rev_host);
 
 
 int main (int argc, char *argv[]) {
@@ -31,6 +35,7 @@ int main (int argc, char *argv[]) {
     return 0;
   }
 
+  int sockfd;
   char *ip_addr, *reverse_hostname;
   struct sockaddr_in addr_con;
 
@@ -43,6 +48,21 @@ int main (int argc, char *argv[]) {
   reverse_hostname = reverse_dns_lookup(ip_addr);
   printf("\nTrying to connect to '%s' IP: %s\n", argv[1], ip_addr);
   printf("\nReverse Lookup domain: %s\n", reverse_hostname);
+
+  // to create socket, need run with 'sudo'
+  sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+  if (sockfd < 0) {
+    printf("\nSocket file descriptor not received.\n");
+    return 0;
+  }
+  printf("\nSocket file descriptor %d received\n", sockfd);
+
+  signal(SIGINT, intHandler);
+
+  // send ping
+  send_ping(sockfd, &addr_con, reverse_hostname, ip_addr, argv[1]);
+
+  return 0;
 }
 
 char *dns_lookup(char *addr_host, struct sockaddr_in *addr_con) {
@@ -80,4 +100,12 @@ char *reverse_dns_lookup(char *ip_addr) {
   ret_buf = (char*) malloc((strlen(buf) + 1) * sizeof(char));
   strcpy(ret_buf, buf);
   return ret_buf;
+}
+
+void intHandler(int dummy) {
+  pingloop = 0;
+}
+
+void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr, char ping_dom, char *ping_ip, char *rev_host) {
+
 }
