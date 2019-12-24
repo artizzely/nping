@@ -8,6 +8,8 @@
 #include <netinet/ip_icmp.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <signal.h>
+#include <time.h>
 #include "nping.h"
 
 int pingloop = 1;
@@ -57,6 +59,7 @@ int main (int argc, char *argv[]) {
   }
   printf("\nSocket file descriptor %d received\n", sockfd);
 
+  // bind handler on interrupt signal (ctrl+c)
   signal(SIGINT, intHandler);
 
   // send ping
@@ -107,5 +110,24 @@ void intHandler(int dummy) {
 }
 
 void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr, char ping_dom, char *ping_ip, char *rev_host) {
+  int ttl_val = 64, msg_count = 0, flag = 1, msg_received_count = 0;
+  int i, addr_len;
 
+  struct ping_pkt pkt;
+  struct sockaddr_in r_addr;
+  struct timespec time_start, time_end, tfs, tfe;
+
+  clock_gettime(CLOCK_MONOTONIC, &tfs);
+
+  if (setsockopt(ping_sockfd, IPPROTO_IP, IP_TTL, &ttl_val, sizeof(ttl_val)) != 0) {
+    printf("\nSending socket options to TTL failed...\n");
+    return;
+  }
+
+  printf("\nSocket set to TTL...\n")
+
+  // programm's loop
+  while (pingloop) {
+
+  }
 }
