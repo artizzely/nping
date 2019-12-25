@@ -3,6 +3,6 @@
 /* Auto port number */
 #define PORT_NO 0
 /* Sleep rate  */
-#define PING_SLEEP_RATE 100000 x
+#define PING_SLEEP_RATE 100000
 /* Dealy for receiving packets (in seconds)  */
 #define RECV_TIMEOUT 1
