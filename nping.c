@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
+#include <errno.h>
 #include "nping.h"
 
 int pingloop = 1;
@@ -163,8 +164,11 @@ void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, c
 
     addr_len = sizeof(r_addr);
 
+    int ret = recvfrom(ping_sockfd, &pkt, sizeof(pkt), 0, (struct sockaddr *) &r_addr, &addr_len);
     // todo I've got a problem here...
-    if (recvfrom(ping_sockfd, &pkt, sizeof(pkt), 0, (struct sockaddr *) &r_addr, &addr_len) <= 0 && msg_count > 1) {
+    if (ret <= 0 && msg_count > 1) {
+      printf("error : %d ", errno);
+      printf("That means: %s", strerror(errno));
       printf("\nPacket receive failed...\n");
     } else {
       clock_gettime(CLOCK_MONOTONIC, &time_end);
